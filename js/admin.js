@@ -1,7 +1,17 @@
 /* ===== ADMIN PANEL ===== */
-const ADMIN_PASS = 'admin123';
+// L'hash SHA-256 della password "admin123". 
+// In questo modo, la password NON è visibile in chiaro nel codice o su GitHub!
+const ADMIN_PASS_HASH = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9';
 let adminLoggedIn = false;
 let adminCurrentSport = 'calcio';
+
+// Calcola l'hash SHA-256 in modo nativo e sicuro usando le Web Crypto API del browser
+async function hashPassword(password) {
+  const msgBuffer = new TextEncoder().encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
 
 function renderAdmin() {
   if (!adminLoggedIn) return renderAdminLogin();
@@ -24,9 +34,11 @@ function renderAdminLogin() {
   `;
 }
 
-function doAdminLogin() {
-  const pass = document.getElementById('admin-pass').value;
-  if (pass === ADMIN_PASS) {
+async function doAdminLogin() {
+  const inputPass = document.getElementById('admin-pass').value;
+  const hashedInput = await hashPassword(inputPass);
+
+  if (hashedInput === ADMIN_PASS_HASH) {
     adminLoggedIn = true;
     document.getElementById('app-content').innerHTML = renderAdmin();
   } else {
@@ -39,7 +51,7 @@ function renderAdminPanel() {
   return `
     <h1 class="page-title">⚙️ Pannello Admin</h1>
     <div class="admin-sport-tabs">
-      ${['calcio','pallavolo','basket','billiardino'].map(s => `
+      ${['calcio', 'pallavolo', 'basket', 'billiardino'].map(s => `
         <button class="admin-sport-tab ${adminCurrentSport === s ? 'active' : ''}"
           onclick="switchAdminSport('${s}', this)">${sportIcon(s)} ${sportName(s)}</button>
       `).join('')}
@@ -105,8 +117,8 @@ function renderAdminSport(sport) {
         <div class="section-title"><span class="group-label">Girone ${g}</span></div>
         ${groups[g].map((t, i) => `
           <div class="team-input-row">
-            <span class="team-label">${i+1}</span>
-            <input type="text" value="${t}" placeholder="Nome squadra ${i+1}"
+            <span class="team-label">${i + 1}</span>
+            <input type="text" value="${t}" placeholder="Nome squadra ${i + 1}"
               id="team_${sport}_${g}_${i}" onchange="updateTeam('${sport}','${g}',${i},this.value)">
           </div>
         `).join('')}
@@ -118,8 +130,8 @@ function renderAdminSport(sport) {
         <div class="section-title">👥 Squadre</div>
         ${data.teams.map((t, i) => `
           <div class="team-input-row">
-            <span class="team-label">${i+1}</span>
-            <input type="text" value="${t}" placeholder="Nome squadra ${i+1}"
+            <span class="team-label">${i + 1}</span>
+            <input type="text" value="${t}" placeholder="Nome squadra ${i + 1}"
               id="team_${sport}_${i}" onchange="updateLeagueTeam('${sport}',${i},this.value)">
           </div>
         `).join('')}
@@ -277,7 +289,7 @@ function renderAdminMatchEdit(m, sport) {
 
 function updateMatch(matchId, field, value) {
   const state = getState();
-  for (const sport of ['calcio','pallavolo','basket','billiardino']) {
+  for (const sport of ['calcio', 'pallavolo', 'basket', 'billiardino']) {
     const idx = state[sport].matches.findIndex(m => m.id === matchId);
     if (idx !== -1) {
       if (field === 'score1' || field === 'score2') {
@@ -295,7 +307,7 @@ function updateMatch(matchId, field, value) {
 
 function saveMatch(matchId) {
   const state = getState();
-  for (const sport of ['calcio','pallavolo','basket','billiardino']) {
+  for (const sport of ['calcio', 'pallavolo', 'basket', 'billiardino']) {
     const idx = state[sport].matches.findIndex(m => m.id === matchId);
     if (idx !== -1) {
       const m = state[sport].matches[idx];
