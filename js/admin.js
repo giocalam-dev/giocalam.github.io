@@ -1,5 +1,4 @@
 /* ===== ADMIN PANEL ===== */
-// L'hash SHA-256 della password "admin123". 
 // In questo modo, la password NON è visibile in chiaro nel codice o su GitHub!
 const ADMIN_PASS_HASH = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9';
 let adminLoggedIn = false;
