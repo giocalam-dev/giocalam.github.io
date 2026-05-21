@@ -5,13 +5,13 @@ function renderHome() {
   const sports = [
     { key: 'calcio', icon: '⚽', name: 'Calcio', desc: '2 gironi da 3 → Semifinali → Finale', configured: state.calcio.configured },
     { key: 'pallavolo', icon: '🏐', name: 'Pallavolo', desc: '2 gironi da 4 → Quarti → Semi → Finale', configured: state.pallavolo.configured },
-    { key: 'basket', icon: '🏀', name: 'Basket', desc: '5 squadre - Campionato', configured: state.basket.configured },
-    { key: 'balilla', icon: '⚽', name: 'Calcetto Balilla', desc: '6 squadre - Campionato', configured: state.balilla.configured },
+    { key: 'basket', icon: '🏀', name: 'Basket', desc: '2 gironi da 4 → Quarti → Semi → Finale', configured: state.basket.configured },
+    { key: 'billiardino', icon: '🎯', name: 'Biliardino', desc: '9 squadre - Campionato', configured: state.billiardino.configured },
   ];
 
   // Upcoming matches across all sports
   let upcoming = [];
-  ['calcio','pallavolo','basket','balilla'].forEach(sp => {
+  ['calcio','pallavolo','basket','billiardino'].forEach(sp => {
     const d = state[sp];
     if (d.configured) {
       d.matches.filter(m => !m.played && m.date).forEach(m => {
@@ -228,26 +228,60 @@ function renderBasket() {
   const data = getSport('basket');
   if (!data.configured) return renderNotConfigured('Basket', 'basket');
 
-  const standings = getLeagueStandings(data.matches, 'basket', data.teams);
+  const matches = data.matches;
+  const updatedData = updateKnockoutBrackets('basket', data);
+  setSport('basket', updatedData);
+
+  const stA = getGroupStandings(matches, 'basket', 'A', data.groups.A);
+  const stB = getGroupStandings(matches, 'basket', 'B', data.groups.B);
+
   return `
     <h1 class="page-title">🏀 Basket</h1>
-    <div class="section-title" style="color:var(--white)">📊 Classifica</div>
-    ${renderStandingsTable(standings, 'basket')}
-    <div class="mt-24">
-      ${renderMatchList(data.matches, '📋 Calendario')}
+    <div class="sport-tabs">
+      <button class="sport-tab active" onclick="switchBasketTab('gironi')">Gironi</button>
+      <button class="sport-tab" onclick="switchBasketTab('eliminatorie')">Eliminatorie</button>
+    </div>
+    <div id="basket-content">
+      ${renderBasketGironi(stA, stB, matches)}
     </div>
   `;
 }
 
-function renderBalilla() {
-  const data = getSport('balilla');
-  if (!data.configured) return renderNotConfigured('Calcetto Balilla', 'balilla');
+function switchBasketTab(tab) {
+  document.querySelectorAll('.sport-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  const el = document.getElementById('basket-content');
+  const data = getSport('basket');
+  const matches = data.matches;
+  if (tab === 'gironi') {
+    const stA = getGroupStandings(matches, 'basket', 'A', data.groups.A);
+    const stB = getGroupStandings(matches, 'basket', 'B', data.groups.B);
+    el.innerHTML = renderBasketGironi(stA, stB, matches);
+  } else {
+    el.innerHTML = renderBasketBracketView(matches);
+  }
+}
 
-  const standings = getLeagueStandings(data.matches, 'balilla', data.teams);
+function renderBasketGironi(stA, stB, matches) {
   return `
-    <h1 class="page-title">⚽ Calcetto Balilla</h1>
+    <div class="group-label">Girone A</div>
+    ${renderStandingsTable(stA, 'basket')}
+    ${renderMatchList(matches.filter(m => m.group === 'A' && m.phase === 'group'), '📋 Partite Girone A')}
+    <div class="group-label mt-24">Girone B</div>
+    ${renderStandingsTable(stB, 'basket')}
+    ${renderMatchList(matches.filter(m => m.group === 'B' && m.phase === 'group'), '📋 Partite Girone B')}
+  `;
+}
+
+function renderBilliardino() {
+  const data = getSport('billiardino');
+  if (!data.configured) return renderNotConfigured('Biliardino', 'billiardino');
+
+  const standings = getLeagueStandings(data.matches, 'billiardino', data.teams);
+  return `
+    <h1 class="page-title">🎯 Biliardino</h1>
     <div class="section-title" style="color:var(--white)">📊 Classifica</div>
-    ${renderStandingsTable(standings, 'balilla')}
+    ${renderStandingsTable(standings, 'billiardino')}
     <div class="mt-24">
       ${renderMatchList(data.matches, '📋 Calendario')}
     </div>

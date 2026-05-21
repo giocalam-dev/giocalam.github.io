@@ -106,6 +106,30 @@ function renderPallavoloBracket(matches) {
   `;
 }
 
+function renderBasketBracketView(matches) {
+  const qfs = matches.filter(m => m.phase === 'quarterFinal').sort((a,b) => a.id.localeCompare(b.id));
+  const semis = matches.filter(m => m.phase === 'semiFinal').sort((a,b) => a.id.localeCompare(b.id));
+  const final0 = matches.find(m => m.phase === 'final');
+  const third = matches.find(m => m.phase === 'thirdPlace');
+  return `
+    <div class="bracket">
+      <div class="bracket-round">
+        <div class="bracket-round-title">Quarti</div>
+        ${qfs.map(m => renderBracketMatch(m)).join('')}
+      </div>
+      <div class="bracket-round">
+        <div class="bracket-round-title">Semifinali</div>
+        ${semis.map(m => renderBracketMatch(m)).join('')}
+      </div>
+      <div class="bracket-round">
+        <div class="bracket-round-title">Finale</div>
+        ${renderBracketMatch(final0)}
+      </div>
+    </div>
+    ${third ? `<div class="mt-16"><div class="section-title">🥉 3° / 4° Posto</div>${renderBracketMatch(third)}</div>` : ''}
+  `;
+}
+
 function formatDate(dateStr) {
   if (!dateStr) return '';
   const d = new Date(dateStr + 'T00:00:00');

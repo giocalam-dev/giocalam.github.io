@@ -67,11 +67,19 @@ function generateAllMatches(sport, data) {
     matches.push(createKnockoutMatch('pallavolo', 'thirdPlace', 0));
     matches.push(createKnockoutMatch('pallavolo', 'final', 0));
   } else if (sport === 'basket') {
+    const gA = data.groups.A.filter(t => t);
+    const gB = data.groups.B.filter(t => t);
+    if (gA.length >= 2) matches.push(...createGroupMatches(gA, 'basket', 'A'));
+    if (gB.length >= 2) matches.push(...createGroupMatches(gB, 'basket', 'B'));
+    // 4 QF + 2 Semi + 3rd place + final
+    for (let i = 0; i < 4; i++) matches.push(createKnockoutMatch('basket', 'quarterFinal', i));
+    matches.push(createKnockoutMatch('basket', 'semiFinal', 0));
+    matches.push(createKnockoutMatch('basket', 'semiFinal', 1));
+    matches.push(createKnockoutMatch('basket', 'thirdPlace', 0));
+    matches.push(createKnockoutMatch('basket', 'final', 0));
+  } else if (sport === 'billiardino') {
     const teams = data.teams.filter(t => t);
-    if (teams.length >= 2) matches = createLeagueMatches(teams, 'basket');
-  } else if (sport === 'balilla') {
-    const teams = data.teams.filter(t => t);
-    if (teams.length >= 2) matches = createLeagueMatches(teams, 'balilla');
+    if (teams.length >= 2) matches = createLeagueMatches(teams, 'billiardino');
   }
   return matches;
 }

@@ -39,7 +39,7 @@ function renderAdminPanel() {
   return `
     <h1 class="page-title">⚙️ Pannello Admin</h1>
     <div class="admin-sport-tabs">
-      ${['calcio','pallavolo','basket','balilla'].map(s => `
+      ${['calcio','pallavolo','basket','billiardino'].map(s => `
         <button class="admin-sport-tab ${adminCurrentSport === s ? 'active' : ''}"
           onclick="switchAdminSport('${s}', this)">${sportIcon(s)} ${sportName(s)}</button>
       `).join('')}
@@ -90,12 +90,12 @@ function switchAdminSport(sport, btn) {
   document.getElementById('admin-sport-content').innerHTML = renderAdminSport(sport);
 }
 
-function sportIcon(s) { return { calcio: '⚽', pallavolo: '🏐', basket: '🏀', balilla: '⚽' }[s]; }
-function sportName(s) { return { calcio: 'Calcio', pallavolo: 'Pallavolo', basket: 'Basket', balilla: 'Balilla' }[s]; }
+function sportIcon(s) { return { calcio: '⚽', pallavolo: '🏐', basket: '🏀', billiardino: '🎯' }[s]; }
+function sportName(s) { return { calcio: 'Calcio', pallavolo: 'Pallavolo', basket: 'Basket', billiardino: 'Biliardino' }[s]; }
 
 function renderAdminSport(sport) {
   const data = getSport(sport);
-  const isGroupSport = sport === 'calcio' || sport === 'pallavolo';
+  const isGroupSport = sport === 'calcio' || sport === 'pallavolo' || sport === 'basket';
 
   let teamsHTML = '';
   if (isGroupSport) {
@@ -153,7 +153,7 @@ function updateLeagueTeam(sport, idx, value) {
 
 function saveTeams(sport) {
   const data = getSport(sport);
-  const isGroupSport = sport === 'calcio' || sport === 'pallavolo';
+  const isGroupSport = sport === 'calcio' || sport === 'pallavolo' || sport === 'basket';
 
   if (isGroupSport) {
     const allTeams = Object.values(data.groups).flat();
@@ -204,7 +204,7 @@ function getFormatHint(sport, phase) {
     if (phase === 'group') return '📏 Set unico a 15 punti — inserisci il punteggio del set';
     return '📏 Meglio dei 3 set — inserisci i set vinti (es. 2-0 o 2-1)';
   }
-  if (sport === 'balilla') return '📏 Inserisci il punteggio della partita';
+  if (sport === 'billiardino') return '📏 Inserisci il punteggio della partita';
   if (sport === 'calcio') return '📏 Inserisci i gol segnati';
   if (sport === 'basket') return '📏 Inserisci i punti segnati';
   return '';
@@ -277,7 +277,7 @@ function renderAdminMatchEdit(m, sport) {
 
 function updateMatch(matchId, field, value) {
   const state = getState();
-  for (const sport of ['calcio','pallavolo','basket','balilla']) {
+  for (const sport of ['calcio','pallavolo','basket','billiardino']) {
     const idx = state[sport].matches.findIndex(m => m.id === matchId);
     if (idx !== -1) {
       if (field === 'score1' || field === 'score2') {
@@ -295,7 +295,7 @@ function updateMatch(matchId, field, value) {
 
 function saveMatch(matchId) {
   const state = getState();
-  for (const sport of ['calcio','pallavolo','basket','balilla']) {
+  for (const sport of ['calcio','pallavolo','basket','billiardino']) {
     const idx = state[sport].matches.findIndex(m => m.id === matchId);
     if (idx !== -1) {
       const m = state[sport].matches[idx];
@@ -303,7 +303,7 @@ function saveMatch(matchId) {
         showToast('⚠️ Inserisci entrambi i punteggi');
         return;
       }
-      if (m.score1 === m.score2 && (sport === 'pallavolo' || sport === 'balilla')) {
+      if (m.score1 === m.score2 && (sport === 'pallavolo' || sport === 'billiardino')) {
         showToast('⚠️ Non è possibile un pareggio in questo sport');
         return;
       }

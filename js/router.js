@@ -6,7 +6,7 @@ const routes = {
   calcio: renderCalcio,
   pallavolo: renderPallavolo,
   basket: renderBasket,
-  balilla: renderBalilla,
+  billiardino: renderBilliardino,
   admin: renderAdmin
 };
 

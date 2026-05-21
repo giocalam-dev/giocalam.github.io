@@ -23,12 +23,12 @@ const DEFAULT_STATE = {
   },
   basket: {
     configured: false,
-    teams: ['','','','',''],
+    groups: { A: ['','','',''], B: ['','','',''] },
     matches: []
   },
-  balilla: {
+  billiardino: {
     configured: false,
-    teams: ['','','','','',''],
+    teams: ['','','','','','','','',''],
     matches: []
   }
 };
