@@ -38,11 +38,18 @@ function getState() {
     const d = localStorage.getItem(STORAGE_KEY);
     if (d) {
       const parsed = JSON.parse(d);
-      if (parsed && parsed.version === DEFAULT_STATE.version) {
+      if (
+        parsed && 
+        parsed.version === DEFAULT_STATE.version &&
+        parsed.calcio &&
+        parsed.pallavolo &&
+        parsed.basket &&
+        parsed.billiardino
+      ) {
         return parsed;
       }
     }
-    // Se la versione è vecchia o mancante, resetta lo stato locale per evitare crash
+    // Se la versione è vecchia o mancano chiavi fondamentali, resetta lo stato locale
     const fresh = JSON.parse(JSON.stringify(DEFAULT_STATE));
     localStorage.setItem(STORAGE_KEY, JSON.stringify(fresh));
     return fresh;
@@ -93,6 +100,18 @@ async function syncWithCloud() {
     const cloudState = await res.json();
     
     if (cloudState && typeof cloudState === 'object') {
+      // Valida la struttura dello stato scaricato dal cloud prima di applicarlo
+      if (
+        cloudState.version !== DEFAULT_STATE.version ||
+        !cloudState.calcio ||
+        !cloudState.pallavolo ||
+        !cloudState.basket ||
+        !cloudState.billiardino
+      ) {
+        console.warn('⚠️ Lo stato del database cloud ha una versione precedente o non compatibile. Ignorato.');
+        return;
+      }
+
       const localState = getState();
       
       // Sincronizza solo se i dati del cloud sono più recenti di quelli locali

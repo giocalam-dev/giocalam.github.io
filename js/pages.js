@@ -3,18 +3,18 @@
 function renderHome() {
   const state = getState();
   const sports = [
-    { key: 'calcio', icon: '⚽', name: 'Calcio', desc: '2 gironi da 3 → Semifinali → Finale', configured: state.calcio.configured },
-    { key: 'pallavolo', icon: '🏐', name: 'Pallavolo', desc: '2 gironi da 4 → Quarti → Semi → Finale', configured: state.pallavolo.configured },
-    { key: 'basket', icon: '🏀', name: 'Basket', desc: '2 gironi da 4 → Quarti → Semi → Finale', configured: state.basket.configured },
-    { key: 'billiardino', icon: '🎯', name: 'Biliardino', desc: '9 squadre - Campionato', configured: state.billiardino.configured },
+    { key: 'calcio', icon: '⚽', name: 'Calcio', desc: '2 gironi da 3 → Semifinali → Finale', configured: (state.calcio || {}).configured || false },
+    { key: 'pallavolo', icon: '🏐', name: 'Pallavolo', desc: '2 gironi da 4 → Quarti → Semi → Finale', configured: (state.pallavolo || {}).configured || false },
+    { key: 'basket', icon: '🏀', name: 'Basket', desc: '2 gironi da 4 → Quarti → Semi → Finale', configured: (state.basket || {}).configured || false },
+    { key: 'billiardino', icon: '🎯', name: 'Biliardino', desc: '9 squadre - Campionato', configured: (state.billiardino || {}).configured || false },
   ];
 
   // Upcoming matches across all sports
   let upcoming = [];
   ['calcio','pallavolo','basket','billiardino'].forEach(sp => {
     const d = state[sp];
-    if (d.configured) {
-      d.matches.filter(m => !m.played && m.date).forEach(m => {
+    if (d && d.configured) {
+      (d.matches || []).filter(m => !m.played && m.date).forEach(m => {
         upcoming.push({ ...m, sportName: sp });
       });
     }
@@ -124,7 +124,7 @@ function renderPlatformDesktop() {
 
 function renderCalcio() {
   const data = getSport('calcio');
-  if (!data.configured) return renderNotConfigured('Calcio', 'calcio');
+  if (!data || !data.configured) return renderNotConfigured('Calcio', 'calcio');
 
   const matches = data.matches;
   const updatedData = updateKnockoutBrackets('calcio', data);
@@ -177,7 +177,7 @@ function renderCalcioGironi(stA, stB, matchesA, matchesB) {
 
 function renderPallavolo() {
   const data = getSport('pallavolo');
-  if (!data.configured) return renderNotConfigured('Pallavolo', 'pallavolo');
+  if (!data || !data.configured) return renderNotConfigured('Pallavolo', 'pallavolo');
 
   const matches = data.matches;
   const updatedData = updateKnockoutBrackets('pallavolo', data);
@@ -226,7 +226,7 @@ function renderPallavoloGironi(stA, stB, matches) {
 
 function renderBasket() {
   const data = getSport('basket');
-  if (!data.configured) return renderNotConfigured('Basket', 'basket');
+  if (!data || !data.configured) return renderNotConfigured('Basket', 'basket');
 
   const matches = data.matches;
   const updatedData = updateKnockoutBrackets('basket', data);
@@ -275,7 +275,7 @@ function renderBasketGironi(stA, stB, matches) {
 
 function renderBilliardino() {
   const data = getSport('billiardino');
-  if (!data.configured) return renderNotConfigured('Biliardino', 'billiardino');
+  if (!data || !data.configured) return renderNotConfigured('Biliardino', 'billiardino');
 
   const standings = getLeagueStandings(data.matches, 'billiardino', data.teams);
   return `

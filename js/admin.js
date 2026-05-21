@@ -94,12 +94,12 @@ function sportIcon(s) { return { calcio: '⚽', pallavolo: '🏐', basket: '🏀
 function sportName(s) { return { calcio: 'Calcio', pallavolo: 'Pallavolo', basket: 'Basket', billiardino: 'Biliardino' }[s]; }
 
 function renderAdminSport(sport) {
-  const data = getSport(sport);
+  const data = getSport(sport) || {};
   const isGroupSport = sport === 'calcio' || sport === 'pallavolo' || sport === 'basket';
 
   let teamsHTML = '';
   if (isGroupSport) {
-    const groups = data.groups;
+    const groups = data.groups || {};
     teamsHTML = Object.keys(groups).map(g => `
       <div class="admin-section">
         <div class="section-title"><span class="group-label">Girone ${g}</span></div>
@@ -135,7 +135,7 @@ function renderAdminSport(sport) {
         💾 Salva e Genera Calendario
       </button>
     </div>
-    ${data.configured ? renderAdminMatches(sport, data) : '<div class="card-glass" style="text-align:center;padding:24px;color:var(--white)">Salva le squadre per generare il calendario delle partite</div>'}
+    ${data && data.configured ? renderAdminMatches(sport, data) : '<div class="card-glass" style="text-align:center;padding:24px;color:var(--white)">Salva le squadre per generare il calendario delle partite</div>'}
   `;
 }
 
