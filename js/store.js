@@ -1,6 +1,12 @@
 /* ===== DATA STORE - localStorage + Cloud Sync ===== */
 const STORAGE_KEY = 'torneo-lam-data';
-const CONFIG_KEY = 'torneo-lam-config';
+
+// 🌐 LA TUA URL DI FIREBASE (IMPORTANTE!)
+// Inserisci qui la URL del tuo database Firebase tra gli apici.
+// Esempio: 'https://tuo-torneo-default-rtdb.europe-west1.firebasedatabase.app/torneo-state.json'
+// In questo modo, l'indirizzo del database sarà scritto direttamente nel codice
+// e TUTTI i dispositivi del pubblico sapranno dove connettersi in automatico!
+const CLOUD_URL = 'https://giocalam-db-default-rtdb.europe-west1.firebasedatabase.app/torneo-state.json';
 
 const DEFAULT_STATE = {
   version: 1,
@@ -27,27 +33,6 @@ const DEFAULT_STATE = {
   }
 };
 
-function getCloudUrl() {
-  try {
-    const config = localStorage.getItem(CONFIG_KEY);
-    return config ? JSON.parse(config).cloudUrl || '' : '';
-  } catch { return ''; }
-}
-
-function setCloudUrl(url) {
-  try {
-    const config = localStorage.getItem(CONFIG_KEY) ? JSON.parse(localStorage.getItem(CONFIG_KEY)) : {};
-    config.cloudUrl = url.trim();
-    localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
-    // Avvia una sincronizzazione immediata se viene inserita una nuova URL
-    if (config.cloudUrl) {
-      syncWithCloud();
-    }
-  } catch (e) {
-    console.error(e);
-  }
-}
-
 function getState() {
   try {
     const d = localStorage.getItem(STORAGE_KEY);
@@ -59,17 +44,15 @@ function setState(s) {
   s.lastUpdated = Date.now();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
   
-  // Salva sul cloud in background se configurato
-  const url = getCloudUrl();
-  if (url) {
-    saveToCloud(url, s);
+  // Salva sul cloud in background se configurato nel codice
+  if (CLOUD_URL && CLOUD_URL !== '') {
+    saveToCloud(s);
   }
 }
 
-async function saveToCloud(url, state) {
+async function saveToCloud(state) {
   try {
-    // Aggiungi .json se manca alla URL di Firebase per compatibilità con la REST API
-    let endpoint = url;
+    let endpoint = CLOUD_URL;
     if (!endpoint.endsWith('.json')) {
       endpoint = endpoint.endsWith('/') ? endpoint + 'torneo-state.json' : endpoint + '/torneo-state.json';
     }
@@ -85,12 +68,11 @@ async function saveToCloud(url, state) {
   }
 }
 
-// Questa funzione scarica i dati aggiornati dal cloud
+// Questa funzione scarica i dati aggiornati dal cloud all'avvio dell'app e ogni 15s
 async function syncWithCloud() {
-  const url = getCloudUrl();
-  if (!url) return;
+  if (!CLOUD_URL || CLOUD_URL === '') return;
   try {
-    let endpoint = url;
+    let endpoint = CLOUD_URL;
     if (!endpoint.endsWith('.json')) {
       endpoint = endpoint.endsWith('/') ? endpoint + 'torneo-state.json' : endpoint + '/torneo-state.json';
     }
@@ -102,7 +84,7 @@ async function syncWithCloud() {
     if (cloudState && typeof cloudState === 'object') {
       const localState = getState();
       
-      // Sincronizza solo se i dati del cloud sono più recenti
+      // Sincronizza solo se i dati del cloud sono più recenti di quelli locali
       if (!localState.lastUpdated || cloudState.lastUpdated > localState.lastUpdated) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(cloudState));
         console.log('🔄 Dati aggiornati dal database cloud!');

@@ -35,7 +35,7 @@ function doAdminLogin() {
 }
 
 function renderAdminPanel() {
-  const cloudUrl = getCloudUrl();
+  const isCloudActive = CLOUD_URL && CLOUD_URL !== '';
   return `
     <h1 class="page-title">⚙️ Pannello Admin</h1>
     <div class="admin-sport-tabs">
@@ -52,44 +52,27 @@ function renderAdminPanel() {
     <div class="card mt-24">
       <div class="section-title">🌐 Sincronizzazione Cloud (Firebase)</div>
       <p style="font-size:0.82rem;color:rgba(27,42,107,0.6);margin-bottom:12px">
-        Inserisci la URL del tuo database Firebase Realtime per consentire a chiunque di vedere i risultati in tempo reale su qualsiasi dispositivo.
+        Il Cloud Sync sincronizza i punteggi su tutti i telefoni e computer in tempo reale.
       </p>
+      
       <div class="input-group">
-        <label for="cloud-url-input">Firebase Database URL</label>
-        <input type="url" id="cloud-url-input" value="${cloudUrl}" placeholder="https://tuo-db.europe-west1.firebasedatabase.app/" style="font-family:monospace;font-size:0.82rem">
+        <label>URL Database Attiva (impostata nel codice):</label>
+        <input type="text" readonly value="${isCloudActive ? CLOUD_URL : 'Nessuna URL configurata'}" style="font-family:monospace;font-size:0.78rem;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.7)">
       </div>
-      <div style="display:flex;gap:12px;margin-top:12px">
-        <button class="btn btn-primary btn-sm" onclick="saveCloudConfig()">💾 Salva e Connetti</button>
-        ${cloudUrl ? `<button class="btn btn-danger btn-sm" onclick="disableCloudSync()">Disattiva</button>` : ''}
+      
+      <div style="font-size:0.82rem;font-weight:600;margin-top:12px;display:flex;align-items:center;gap:8px">
+        ${isCloudActive ? '🟢 <span style="color:#28a745">Sincronizzazione Attiva!</span>' : '⚪️ <span style="color:#6c757d">Inattiva (Solo locale su questo dispositivo)</span>'}
       </div>
-      <div style="font-size:0.75rem;color:rgba(27,42,107,0.5);margin-top:8px">
-        ${cloudUrl ? '🟢 Sincronizzazione Cloud Attiva!' : '⚪️ Cloud Sync non attivo (i dati rimangono in locale su questo browser)'}
-      </div>
+      
+      <p style="font-size:0.75rem;color:rgba(27,42,107,0.5);margin-top:8px;line-height:1.3">
+        ⚠️ Per cambiare il database, ti basta incollare la tua nuova URL di Firebase direttamente all'inizio del file <code>js/store.js</code> (alla riga 9) e fare il push. In questo modo tutti i dispositivi si connetteranno automaticamente allo stesso database!
+      </p>
     </div>
 
     <div class="mt-24 mb-24" style="text-align:center">
       <button class="btn btn-danger btn-sm" id="reset-all-btn" onclick="doResetAll()">🗑️ Reset Tutti i Dati</button>
     </div>
   `;
-}
-
-function saveCloudConfig() {
-  const url = document.getElementById('cloud-url-input').value.trim();
-  if (!url) {
-    showToast('⚠️ Inserisci una URL valida');
-    return;
-  }
-  setCloudUrl(url);
-  showToast('✅ Connessione Cloud salvata!');
-  document.getElementById('app-content').innerHTML = renderAdminPanel();
-}
-
-function disableCloudSync() {
-  if (confirm('Vuoi disattivare la sincronizzazione cloud? I dati rimarranno salvati in locale su questo browser.')) {
-    setCloudUrl('');
-    showToast('⚪️ Sincronizzazione Cloud disattivata');
-    document.getElementById('app-content').innerHTML = renderAdminPanel();
-  }
 }
 
 function doResetAll() {
