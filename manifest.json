@@ -2,14 +2,14 @@
   "name": "GiocaLAM",
   "short_name": "GiocaLAM",
   "description": "GiocaLAM - Gestione tornei sportivi - Lista Autonoma Mente",
-  "start_url": "/",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#64c4c3",
   "theme_color": "#64c4c3",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/assets/logo.png",
+      "src": "assets/logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
