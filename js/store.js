@@ -6,7 +6,7 @@ const STORAGE_KEY = 'torneo-lam-data';
 // Esempio: 'https://tuo-torneo-default-rtdb.europe-west1.firebasedatabase.app/torneo-state.json'
 // In questo modo, l'indirizzo del database sarà scritto direttamente nel codice
 // e TUTTI i dispositivi del pubblico sapranno dove connettersi in automatico!
-const CLOUD_URL = 'https://giocalam-db-default-rtdb.europe-west1.firebasedatabase.app/torneo-state.json';
+const CLOUD_URL = 'https://giocalam-default-rtdb.europe-west1.firebasedatabase.app/';
 
 const DEFAULT_STATE = {
   version: 1,
