@@ -9,7 +9,7 @@ const STORAGE_KEY = 'torneo-lam-data';
 const CLOUD_URL = 'https://giocalam-default-rtdb.europe-west1.firebasedatabase.app/';
 
 const DEFAULT_STATE = {
-  version: 1,
+  version: 2,
   lastUpdated: 0,
   calcio: {
     configured: false,
@@ -36,8 +36,19 @@ const DEFAULT_STATE = {
 function getState() {
   try {
     const d = localStorage.getItem(STORAGE_KEY);
-    return d ? JSON.parse(d) : JSON.parse(JSON.stringify(DEFAULT_STATE));
-  } catch { return JSON.parse(JSON.stringify(DEFAULT_STATE)); }
+    if (d) {
+      const parsed = JSON.parse(d);
+      if (parsed && parsed.version === DEFAULT_STATE.version) {
+        return parsed;
+      }
+    }
+    // Se la versione è vecchia o mancante, resetta lo stato locale per evitare crash
+    const fresh = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(fresh));
+    return fresh;
+  } catch { 
+    return JSON.parse(JSON.stringify(DEFAULT_STATE)); 
+  }
 }
 
 function setState(s) {
