@@ -13,7 +13,7 @@ L'applicazione presenta un design premium in stile *glassmorphism* ottimizzato p
     *   **Calcio**: 6 squadre divise in 2 gironi da 3. Calcolo automatico delle semifinali, della finalissima e di una finale di consolazione dedicata alle ultime classificate dei gironi.
     *   **Pallavolo**: 2 gironi da 4 squadre. Quarti di finale incrociati (1A vs 4B, ecc.), semifinali, finale 3°/4° posto e finalissima. Partite dei gironi a set unico ai 15 punti, fasi finali al meglio dei 3 set.
     *   **Basket**: 2 gironi da 4 squadre. Quarti di finale incrociati (1A vs 4B, ecc.), semifinali, finale 3°/4° posto e finalissima.
-    *   **Biliardino**: Campionato a girone unico (9 squadre).
+    *   **Biliardino**: Campionato a girone unico (10 squadre).
 *   **📊 Classifiche Automatiche Intelligenti**: Calcolo automatico dei punti e dei criteri di spareggio (differenza reti/punti, gol fatti) in base al regolamento specifico di ogni sport:
     *   *Calcio/Basket*: Vittoria (3 pt), Pareggio (1 pt), Sconfitta (0 pt).
     *   *Pallavolo/Biliardino*: Vittoria netta (3 pt), Vittoria ai vantaggi (2 pt), Sconfitta ai vantaggi (1 pt), Sconfitta netta (0 pt). Pareggio non ammesso.

@@ -9,7 +9,7 @@ const STORAGE_KEY = 'torneo-lam-data';
 const CLOUD_URL = 'https://giocalam-default-rtdb.europe-west1.firebasedatabase.app/';
 
 const DEFAULT_STATE = {
-  version: 2,
+  version: 3,
   lastUpdated: 0,
   calcio: {
     configured: false,
@@ -28,7 +28,7 @@ const DEFAULT_STATE = {
   },
   billiardino: {
     configured: false,
-    teams: ['','','','','','','','',''],
+    teams: ['','','','','','','','','',''],
     matches: []
   }
 };

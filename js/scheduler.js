@@ -15,7 +15,7 @@ function createGroupMatches(teams, sport, group) {
     id: `${sport}_g${group}_${i}`,
     team1: p[0], team2: p[1],
     score1: null, score2: null,
-    date: '', time: '',
+    date: '2026-05-24', time: '',
     phase: 'group', group: group,
     isAdvantage: false, played: false, sport: sport
   }));
@@ -26,7 +26,7 @@ function createLeagueMatches(teams, sport) {
     id: `${sport}_league_${i}`,
     team1: p[0], team2: p[1],
     score1: null, score2: null,
-    date: '', time: '',
+    date: '2026-05-24', time: '',
     phase: 'league', group: null,
     isAdvantage: false, played: false, sport: sport
   }));
@@ -37,7 +37,7 @@ function createKnockoutMatch(sport, phase, idx) {
     id: `${sport}_${phase}_${idx}`,
     team1: '', team2: '',
     score1: null, score2: null,
-    date: '', time: '',
+    date: '2026-05-24', time: '',
     phase: phase, group: null,
     isAdvantage: false, played: false, sport: sport
   };

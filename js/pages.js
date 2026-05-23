@@ -6,7 +6,7 @@ function renderHome() {
     { key: 'calcio', icon: '⚽', name: 'Calcio', desc: '2 gironi da 3 → Semifinali → Finale', configured: (state.calcio || {}).configured || false },
     { key: 'pallavolo', icon: '🏐', name: 'Pallavolo', desc: '2 gironi da 4 → Quarti → Semi → Finale', configured: (state.pallavolo || {}).configured || false },
     { key: 'basket', icon: '🏀', name: 'Basket', desc: '2 gironi da 4 → Quarti → Semi → Finale', configured: (state.basket || {}).configured || false },
-    { key: 'billiardino', icon: '🎯', name: 'Biliardino', desc: '9 squadre - Campionato', configured: (state.billiardino || {}).configured || false },
+    { key: 'billiardino', icon: '🎯', name: 'Biliardino', desc: '10 squadre - Campionato', configured: (state.billiardino || {}).configured || false },
   ];
 
   // Upcoming matches across all sports
