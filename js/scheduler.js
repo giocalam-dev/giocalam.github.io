@@ -50,9 +50,10 @@ function generateAllMatches(sport, data) {
     const gB = data.groups.B.filter(t => t);
     if (gA.length >= 2) matches.push(...createGroupMatches(gA, 'calcio', 'A'));
     if (gB.length >= 2) matches.push(...createGroupMatches(gB, 'calcio', 'B'));
-    // Knockout: 2 semis + final + consolation
+    // Knockout: 2 semis + final + consolation + thirdPlace
     matches.push(createKnockoutMatch('calcio', 'semiFinal', 0));
     matches.push(createKnockoutMatch('calcio', 'semiFinal', 1));
+    matches.push(createKnockoutMatch('calcio', 'thirdPlace', 0));
     matches.push(createKnockoutMatch('calcio', 'final', 0));
     matches.push(createKnockoutMatch('calcio', 'consolation', 0));
   } else if (sport === 'pallavolo') {

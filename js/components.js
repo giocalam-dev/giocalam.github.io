@@ -67,6 +67,7 @@ function renderCalcioBracket(matches) {
   const semis = matches.filter(m => m.phase === 'semiFinal').sort((a,b) => a.id.localeCompare(b.id));
   const final0 = matches.find(m => m.phase === 'final');
   const cons = matches.find(m => m.phase === 'consolation');
+  const third = matches.find(m => m.phase === 'thirdPlace');
   return `
     <div class="bracket">
       <div class="bracket-round">
@@ -78,7 +79,8 @@ function renderCalcioBracket(matches) {
         ${renderBracketMatch(final0)}
       </div>
     </div>
-    ${cons ? `<div class="mt-16"><div class="section-title">🏁 Finale Ultimi</div>${renderBracketMatch(cons)}</div>` : ''}
+    ${third ? `<div class="mt-16"><div class="section-title">🥉 3° / 4° Posto</div>${renderBracketMatch(third)}</div>` : ''}
+    ${cons ? `<div class="mt-16"><div class="section-title">🏁 Finale Maglia Nera (5° / 6° Posto)</div>${renderBracketMatch(cons)}</div>` : ''}
   `;
 }
 

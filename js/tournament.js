@@ -127,13 +127,20 @@ function updateCalcioBracket(matches, data) {
     }
   }
 
-  // Final from semi winners
+  // Final & 3rd place from semi results
   const sf0 = matches.find(m => m.phase === 'semiFinal' && m.id.endsWith('_0'));
   const sf1 = matches.find(m => m.phase === 'semiFinal' && m.id.endsWith('_1'));
   const fin = matches.find(m => m.phase === 'final');
-  if (sf0 && sf0.played && sf1 && sf1.played && fin && !fin.played) {
-    fin.team1 = getMatchWinner(sf0);
-    fin.team2 = getMatchWinner(sf1);
+  const third = matches.find(m => m.phase === 'thirdPlace');
+  if (sf0 && sf0.played && sf1 && sf1.played) {
+    if (fin && !fin.played) {
+      fin.team1 = getMatchWinner(sf0);
+      fin.team2 = getMatchWinner(sf1);
+    }
+    if (third && !third.played) {
+      third.team1 = getMatchLoser(sf0);
+      third.team2 = getMatchLoser(sf1);
+    }
   }
 }
 
@@ -162,12 +169,12 @@ function updatePallavoloBracket(matches, data) {
   const qfs = matches.filter(m => m.phase === 'quarterFinal').sort((a,b) => a.id.localeCompare(b.id));
   const semis = matches.filter(m => m.phase === 'semiFinal').sort((a,b) => a.id.localeCompare(b.id));
   if (qfs.length >= 4 && semis.length >= 2) {
-    if (qfs[0].played && qfs[1].played && !semis[0].played) {
+    if (qfs[0].played && qfs[2].played && !semis[0].played) {
       semis[0].team1 = getMatchWinner(qfs[0]);
-      semis[0].team2 = getMatchWinner(qfs[1]);
+      semis[0].team2 = getMatchWinner(qfs[2]);
     }
-    if (qfs[2].played && qfs[3].played && !semis[1].played) {
-      semis[1].team1 = getMatchWinner(qfs[2]);
+    if (qfs[1].played && qfs[3].played && !semis[1].played) {
+      semis[1].team1 = getMatchWinner(qfs[1]);
       semis[1].team2 = getMatchWinner(qfs[3]);
     }
   }
@@ -213,12 +220,12 @@ function updateBasketBracket(matches, data) {
   const qfs = matches.filter(m => m.phase === 'quarterFinal').sort((a,b) => a.id.localeCompare(b.id));
   const semis = matches.filter(m => m.phase === 'semiFinal').sort((a,b) => a.id.localeCompare(b.id));
   if (qfs.length >= 4 && semis.length >= 2) {
-    if (qfs[0].played && qfs[1].played && !semis[0].played) {
+    if (qfs[0].played && qfs[2].played && !semis[0].played) {
       semis[0].team1 = getMatchWinner(qfs[0]);
-      semis[0].team2 = getMatchWinner(qfs[1]);
+      semis[0].team2 = getMatchWinner(qfs[2]);
     }
-    if (qfs[2].played && qfs[3].played && !semis[1].played) {
-      semis[1].team1 = getMatchWinner(qfs[2]);
+    if (qfs[1].played && qfs[3].played && !semis[1].played) {
+      semis[1].team1 = getMatchWinner(qfs[1]);
       semis[1].team2 = getMatchWinner(qfs[3]);
     }
   }
