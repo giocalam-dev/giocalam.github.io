@@ -179,7 +179,7 @@ function getState() {
         }
         
         migrated.version = DEFAULT_STATE.version;
-        migrated.lastUpdated = Date.now();
+        migrated.lastUpdated = typeof parsed.lastUpdated === 'number' ? parsed.lastUpdated : 0;
         
         localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
         return migrated;
