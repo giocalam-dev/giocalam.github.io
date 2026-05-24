@@ -179,7 +179,7 @@ function getState() {
         }
         
         migrated.version = DEFAULT_STATE.version;
-        migrated.lastUpdated = typeof parsed.lastUpdated === 'number' ? parsed.lastUpdated : 0;
+        migrated.lastUpdated = 0; // Azzera il timestamp locale per costringere il client a scaricare lo stato aggiornato dal cloud
         
         localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
         return migrated;

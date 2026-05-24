@@ -1,5 +1,5 @@
 // Network-first strategy - always get fresh content
-const CACHE_NAME = 'torneo-lam-v7';
+const CACHE_NAME = 'torneo-lam-v8';
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => {
