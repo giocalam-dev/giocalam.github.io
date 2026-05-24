@@ -263,13 +263,17 @@ async function syncWithCloud() {
         }
         
         activeState.version = DEFAULT_STATE.version;
+        activeState.lastUpdated = typeof cloudState.lastUpdated === 'number' ? cloudState.lastUpdated : Date.now();
         // Non scriviamo sul cloud direttamente per evitare loop o scritture dai client spettatori
       }
 
       const localState = getState();
       
-      // Sincronizza solo se i dati del cloud sono più recenti di quelli locali
-      if (!localState.lastUpdated || activeState.lastUpdated > localState.lastUpdated) {
+      // Sincronizza solo se i dati del cloud sono effettivamente più recenti
+      const localTS = typeof localState.lastUpdated === 'number' ? localState.lastUpdated : 0;
+      const activeTS = typeof activeState.lastUpdated === 'number' ? activeState.lastUpdated : 0;
+      
+      if (activeTS > localTS) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(activeState));
         console.log('🔄 Dati aggiornati e migrati dal database cloud!');
         if (typeof handleRoute === 'function') {
